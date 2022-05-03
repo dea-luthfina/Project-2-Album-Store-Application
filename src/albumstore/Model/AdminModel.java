@@ -12,6 +12,7 @@ public class AdminModel {
     private String title;
     private String artist;
     private String years;
+    private String type;
     private String price;
     private String stock;
 
@@ -35,6 +36,10 @@ public class AdminModel {
         return years;
     }
 
+    public String getType() {
+        return type;
+    }
+
     public void setArtist(String artist) {
         this.artist = artist;
     }
@@ -51,7 +56,11 @@ public class AdminModel {
         this.title = title;
     }
 
-    public void setYears(String year) {
+    public void setYears(String years) {
         this.years = years;
-    }
+    }   
+
+    public void setType(String type) {
+        this.type = type;
+    }    
 }

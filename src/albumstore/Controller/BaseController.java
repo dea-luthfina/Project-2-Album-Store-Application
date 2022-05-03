@@ -8,17 +8,20 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Map;
 import albumstore.Connection.DBConnection;
+import com.sun.rowset.CachedRowSetImpl;
+import java.sql.ResultSet;
+import java.sql.Statement;
 /**
  *
  * @author Prio
  */
 
 public class BaseController {
-    DBConnection koneksi = new DBConnection();
+    DBConnection connection = new DBConnection();
     
     public boolean preparedStatement(Map<Integer, Object> map, String sql) {
         try {
-            Connection con = koneksi.open();
+            Connection con = connection.open();
             PreparedStatement ps = con.prepareStatement(sql);
             
             for(Map.Entry<Integer, Object> entry : map.entrySet()) {
@@ -32,6 +35,49 @@ public class BaseController {
         } catch(SQLException e) {
             System.out.println(e.getMessage());
             return false;
+        }
+    }
+
+    public ResultSet get(String sql) {
+        try{
+            Connection con;
+            con = connection.open();
+            
+            Statement state = con.createStatement();
+            ResultSet rs = state.executeQuery(sql);
+            
+            CachedRowSetImpl crs = new CachedRowSetImpl();
+            crs.populate(rs);
+            
+            con.close();
+            
+            return crs;
+        } catch (Exception e ){
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+    
+    public ResultSet getWithParameter(Map<Integer, Object> map, String sql) {
+        try{
+            Connection con;
+            con = connection.open();
+            PreparedStatement ps = con.prepareStatement(sql);
+            
+            for(Map.Entry<Integer, Object> entry : map.entrySet()) {
+                ps.setString(entry.getKey(), entry.getValue().toString());
+            }
+            
+            ResultSet rs = ps.executeQuery();
+            
+            CachedRowSetImpl crs = new CachedRowSetImpl();
+            crs.populate(rs);
+            
+            con.close();
+            return crs;
+        } catch (Exception e ){
+            System.out.println(e.getMessage());
+            return null;
         }
     }
 }

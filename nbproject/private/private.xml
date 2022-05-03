@@ -3,9 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Prio/Documents/NetBeansProjects/AlbumStore/src/albumstore/Connection/DBConnection.java</file>
-            <file>file:/C:/Users/Prio/Documents/NetBeansProjects/AlbumStore/src/albumstore/AlbumStore.java</file>
-            <file>file:/C:/Users/Prio/Documents/NetBeansProjects/AlbumStore/src/albumstore/Controller/AdminController.java</file>
+            <file>file:/C:/Users/Prio/Documents/NetBeansProjects/AlbumStore/src/albumstore/Frame/UserFrame.java</file>
+            <file>file:/C:/Users/Prio/Documents/NetBeansProjects/AlbumStore/src/albumstore/Frame/AdminFrame.java</file>
         </group>
     </open-files>
 </project-private>

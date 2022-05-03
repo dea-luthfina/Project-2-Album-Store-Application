@@ -13,11 +13,11 @@ import albumstore.Frame.AdminFrame;
 public class AlbumStore {
     public static void main(String[] args) {
         // TODO code application logic here
-        DBConnection con = new DBConnection();
-        System.out.println(con.open());
+//        DBConnection con = new DBConnection();
+//        System.out.println(con.open());
 
-//        AdminFrame con = new AdminFrame();
-//        con.setLocationRelativeTo(null);
-//        con.setVisible(true);
+        AdminFrame con = new AdminFrame();
+        con.setLocationRelativeTo(null);
+        con.setVisible(true);
     }
-}s
+}

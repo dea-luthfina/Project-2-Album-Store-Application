@@ -17,7 +17,7 @@ public class DBConnection {
         try{
         Class.forName("com.mysql.jdbc.Driver");
 
-        String url = "jdbc:mysql://127.0.0.1:3306/albumshop";
+        String url = "jdbc:mysql://127.0.0.1:3306/albumstore";
 
         con = (Connection) DriverManager.getConnection(url, "root", "");
 
