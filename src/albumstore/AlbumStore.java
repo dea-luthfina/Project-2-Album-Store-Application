@@ -5,6 +5,8 @@
 package albumstore;
 import albumstore.Connection.DBConnection;
 import albumstore.Frame.AdminFrame;
+import albumstore.Frame.MainFrame;
+import albumstore.Frame.RegisterFrame;
 
 /**
  *
@@ -16,7 +18,7 @@ public class AlbumStore {
 //        DBConnection con = new DBConnection();
 //        System.out.println(con.open());
 
-        AdminFrame con = new AdminFrame();
+        MainFrame con = new MainFrame();
         con.setLocationRelativeTo(null);
         con.setVisible(true);
     }

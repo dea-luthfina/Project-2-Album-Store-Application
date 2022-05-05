@@ -38,11 +38,11 @@ public class AdminController extends BaseController {
         return this.get(sql);
     }
     
-    public ResultSet showById(String id) {
+    public ResultSet showById(String id_album) {
         String sql = this.query.showById;
         
         Map<Integer, Object> map = new HashMap<>();
-        map.put(1, id);
+        map.put(1, id_album);
         
         return this.getWithParameter(map, sql);
     }
@@ -56,7 +56,7 @@ public class AdminController extends BaseController {
         return this.getWithParameter(map, sql);
     }
     
-    public boolean update(String id, AdminModel model) throws ParseException {
+    public boolean update(String id_album, AdminModel model) throws ParseException {
         
         Map<Integer, Object> map = new HashMap<>();
         map.put(1, model.getTitle());
@@ -65,17 +65,17 @@ public class AdminController extends BaseController {
         map.put(4, model.getType());
         map.put(5, model.getPrice());
         map.put(6, model.getStock());
-        map.put(7, id);
+        map.put(7, id_album);
         
         String sql = this.query.update;
         
         return this.preparedStatement(map, sql);
     }
     
-    public boolean delete(String id) throws ParseException {
+    public boolean delete(String id_album) throws ParseException {
         
         Map<Integer, Object> map = new HashMap<>();
-        map.put(1, id);
+        map.put(1, id_album);
         
         String sql = this.query.delete;
         

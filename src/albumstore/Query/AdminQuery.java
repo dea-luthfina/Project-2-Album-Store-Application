@@ -15,10 +15,10 @@ public class AdminQuery {
      + "stock) VALUES (?, ?, ?, ?, ?, ?)";
     
     public String get = "SELECT * FROM albums";
-    public String showById = "SELECT * FROM albums where id = ?";
+    public String showById = "SELECT * FROM albums where id_album = ?";
     public String showByTitle = "SELECT * FROM albums where title LIKE ?"; 
 
     public String update = "UPDATE albums SET title = ?, artist = ?, "
-     + "years = ?, type = ?, price = ?, stock = ? WHERE id = ?";
-    public String delete = "DELETE FROM albums WHERE id = ?";  
+     + "years = ?, type = ?, price = ?, stock = ? WHERE id_album = ?";
+    public String delete = "DELETE FROM albums WHERE id_album = ?";  
 }
