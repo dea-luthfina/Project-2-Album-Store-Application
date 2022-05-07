@@ -55,6 +55,15 @@ public class AdminController extends BaseController {
         
         return this.getWithParameter(map, sql);
     }
+
+    public ResultSet showByArtist(String artist) {
+        String sql = this.query.showByArtist;
+        
+        Map<Integer, Object> map = new HashMap<>();
+        map.put(1, helper.parseLikeQuery(artist));
+        
+        return this.getWithParameter(map, sql);
+    }
     
     public boolean update(String id_album, AdminModel model) throws ParseException {
         

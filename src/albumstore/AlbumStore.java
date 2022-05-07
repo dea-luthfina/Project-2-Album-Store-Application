@@ -3,11 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
  */
 package albumstore;
-import albumstore.Connection.DBConnection;
-import albumstore.Frame.AdminFrame;
 import albumstore.Frame.MainFrame;
-import albumstore.Frame.RegisterFrame;
-
 /**
  *
  * @author Prio

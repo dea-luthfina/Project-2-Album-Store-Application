@@ -283,19 +283,21 @@ public class RegisterFrame extends javax.swing.JFrame {
 
             String name = this.rs.getString("name");
             String type = this.rs.getString("type");
+            String id_user = this.rs.getString("id_user");
 
             UserModel userModel = new UserModel();
 
             userModel.setUsername(username);
             userModel.setName(name);
             userModel.setType(type);
+            userModel.setId_user(id_user);
 
             JOptionPane.showMessageDialog(
                 null,
                 "Succesfully logged in!"
             );
 
-            OrderFrame of = new OrderFrame();
+            OrderFrame of = new OrderFrame(userModel);
             AdminFrame af = new AdminFrame(userModel);
 
             this.dispose();

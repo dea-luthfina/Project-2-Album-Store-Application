@@ -9,12 +9,17 @@ package albumstore.Model;
  * @author Prio
  */
 public class UserModel {
+    private String id_user;
     private String name;
     private String address;
     private String phone;
     private String username;
     private String password;
     private String type;
+
+    public String getId_user() {
+        return id_user;
+    }
 
     public String getAddress() {
         return address;
@@ -42,6 +47,10 @@ public class UserModel {
 
     public String getPassword() {
         return password;
+    }
+
+    public void setId_user(String id_user) {
+        this.id_user = id_user;
     }
 
     public void setPassword(String password) {

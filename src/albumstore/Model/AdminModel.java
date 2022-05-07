@@ -9,12 +9,21 @@ package albumstore.Model;
  * @author Prio
  */
 public class AdminModel {
+    private String id_album;
     private String title;
     private String artist;
     private String years;
     private String type;
     private String price;
     private String stock;
+
+    public String getId_album() {
+        return id_album;
+    }
+
+    public void setId_album(String id_album) {
+        this.id_album = id_album;
+    }
 
     public String getArtist() {
         return artist;

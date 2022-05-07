@@ -4,6 +4,7 @@
  */
 package albumstore.Controller;
 
+import albumstore.Helper.Helper;
 import albumstore.Model.UserModel;
 import albumstore.Query.UserQuery;
 import java.sql.ResultSet;
@@ -17,6 +18,7 @@ import java.util.Map;
  */
 public class UserController extends BaseController{
      UserQuery uq = new UserQuery();
+     Helper helper = new Helper();
     
     public ResultSet login (UserModel um) {
         String sql = this.uq.login;
@@ -47,11 +49,20 @@ public class UserController extends BaseController{
         return this.get(sql);
     }
     
-    public ResultSet showById(String id) {
+    public ResultSet showById(String id_user) {
         String sql = this.uq.showById;
         
         Map<Integer, Object> map = new HashMap<>();
-        map.put(1, id);
+        map.put(1, id_user);
+        
+        return this.getWithParameter(map, sql);
+    }
+
+    public ResultSet showByType(String type) {
+        String sql = this.uq.showByType;
+        
+        Map<Integer, Object> map = new HashMap<>();
+        map.put(1, helper.parseLikeQuery(type));
         
         return this.getWithParameter(map, sql);
     }

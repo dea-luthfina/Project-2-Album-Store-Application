@@ -18,6 +18,7 @@ public class UserQuery {
             "stock, price, expired) VALUES (?, ?, ?, ?, ?)";
     
     public String get = "SELECT * FROM users";
-    public String showById = "SELECT * FROM users where id_user = ?";  
+    public String showById = "SELECT * FROM users WHERE id_user = ?";  
+    public String showByType = "SELECT * FROM users WHERE type = ?";
 }
 
