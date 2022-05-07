@@ -8,10 +8,12 @@ package albumstore.Frame;
 import albumstore.Controller.AdminController;
 import albumstore.Controller.OrderController;
 import albumstore.Helper.Helper;
+import albumstore.Model.AdminModel;
 import albumstore.Model.OrderModel;
 import albumstore.Model.UserModel;
 import albumstore.Query.OrderQuery;
 import java.sql.ResultSet;
+import java.text.ParseException;
 import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -30,6 +32,10 @@ public class OrderFrame extends javax.swing.JFrame {
     ResultSet rs;
     ResultSet rs1;
     DefaultTableModel defaultmodel;
+
+    //  update stock album
+    AdminModel am = new AdminModel();
+    String album_id;
 
     // permasalahan tanggal
     Helper helper = new Helper();
@@ -59,6 +65,45 @@ public class OrderFrame extends javax.swing.JFrame {
         tf_title_album.setEditable(false);
         tf_price_album.setEditable(false);
         tf_total_price.setEditable(false);
+    }
+
+    public void validation(){
+    String msg = "Form cannot be blank!";
+    String amount = tf_amount_album.getText();
+        if(amount.isEmpty()){
+            JOptionPane.showMessageDialog(null,msg);
+        }
+        if(!amount.matches("[0-9]+")){
+            JOptionPane.showMessageDialog(null, "Amount contains number only!");
+        }
+    }
+
+    public void reduceAlbumStock(){
+        try {
+            int stock, amount, total;
+            stock = Integer.parseInt(helper.getValueRows(tb_album, 6));
+            amount = Integer.parseInt(tf_amount_album.getText());
+            total = stock - amount;
+
+            String update = String.valueOf(total);
+
+            String id_album = helper.getValueRows(tb_album, 0);
+            this.album_id = id_album;
+
+            am.setStock(update);
+
+            Boolean result = controller.updateStock(this.album_id, am);
+
+            String msg = "Gagal mengubah data!";
+            if(result) {
+                msg = "Berhasil mengubah data";
+            }
+            JOptionPane.showMessageDialog(null, msg);
+            this.getDataAlbum();
+
+        } catch (ParseException e) {
+            System.out.println(e.getMessage());
+        }  
     }
 
     public void clear() {
@@ -428,6 +473,12 @@ public class OrderFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_tb_albumMouseClicked
 
     private void btn_submitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_submitActionPerformed
+      // mengurangkan stock album
+      this.reduceAlbumStock();
+
+      // validation
+        this.validation(); 
+
         try {
             String id_album = helper.getValueRows(tb_album, 0);
             String amount = tf_amount_album.getText();
@@ -452,8 +503,7 @@ public class OrderFrame extends javax.swing.JFrame {
             
             JOptionPane.showMessageDialog(null, msg);
             this.clear();
-            this.getDataOrder();
-            
+            this.getDataOrder(); 
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -512,20 +562,20 @@ public class OrderFrame extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(UserFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(OrderFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(UserFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(OrderFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(UserFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(OrderFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(UserFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(OrderFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new UserFrame().setVisible(true);
+                new OrderFrame(null).setVisible(true);
             }
         });
     }

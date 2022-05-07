@@ -21,5 +21,8 @@ public class AdminQuery {
 
     public String update = "UPDATE albums SET title = ?, artist = ?, "
      + "years = ?, type = ?, price = ?, stock = ? WHERE id_album = ?";
+
+    public String updateStock = "UPDATE albums SET stock = ? WHERE id_album = ?";
+
     public String delete = "DELETE FROM albums WHERE id_album = ?";  
 }

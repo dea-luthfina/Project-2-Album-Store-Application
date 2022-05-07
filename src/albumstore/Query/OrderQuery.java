@@ -14,5 +14,8 @@ public class OrderQuery {
 
     public String get = "SELECT * FROM orders";
     public String showByIdOrder = "SELECT * FROM orders where id_order = ?";
-    public String showByIdBuyer = "SELECT * FROM orders where id_user = ?"; 
+    public String showByIdBuyer = "SELECT * FROM orders where id_user = ?";
+    public String showByIdAlbum = "SELECT * FROM orders where id_album = ?";
+
+    public String delete = "DELETE FROM orders WHERE id_order = ?";     
 }

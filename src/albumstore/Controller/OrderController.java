@@ -35,11 +35,20 @@ Helper helper = new Helper();
         return this.getWithParameter(map, sql);
     }
 
-    public ResultSet showByIdBuyer(String id_buyer) {
+    public ResultSet showByIdBuyer(String id_user) {
         String sql = this.oq.showByIdBuyer;
         
         Map<Integer, Object> map = new HashMap<>();
-        map.put(1, helper.parseLikeQuery(id_buyer));
+        map.put(1, id_user);
+        
+        return this.getWithParameter(map, sql);
+    }
+
+    public ResultSet showByIdAlbum(String id_album) {
+        String sql = this.oq.showByIdAlbum;
+        
+        Map<Integer, Object> map = new HashMap<>();
+        map.put(1, id_album);
         
         return this.getWithParameter(map, sql);
     }
@@ -55,6 +64,16 @@ public boolean create(OrderModel om) throws ParseException {
         map.put(5, order_date);
         
         String sql = this.oq.create;
+        
+        return this.preparedStatement(map, sql);
+    }
+
+    public boolean delete(String id_order) throws ParseException {
+        
+        Map<Integer, Object> map = new HashMap<>();
+        map.put(1, id_order);
+        
+        String sql = this.oq.delete;
         
         return this.preparedStatement(map, sql);
     }

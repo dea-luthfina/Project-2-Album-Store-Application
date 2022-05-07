@@ -37,6 +37,7 @@ public class AdminFrame extends javax.swing.JFrame {
     ResultSet rs1;
     ResultSet rs2;
     String album_id;
+    String order_id;
 
     /**
      * Creates new form MainFrame
@@ -57,6 +58,30 @@ public class AdminFrame extends javax.swing.JFrame {
         tf_artist.setText("");
         cb_type.setSelectedIndex(0);
     }     
+
+    private void validation(){
+    String msg = "Form cannot be blank!";
+    String title = tf_title.getText();
+        if(title.isEmpty()){
+            JOptionPane.showMessageDialog(null,msg);
+        }
+    String artist = tf_artist.getText();
+           if(artist.isEmpty()){
+            JOptionPane.showMessageDialog(null,msg);
+        }
+    String years = tf_years.getText();
+           if(years.isEmpty()){
+            JOptionPane.showMessageDialog(null,msg);
+        }
+    String price = tf_price.getText();
+           if(price.isEmpty()){
+            JOptionPane.showMessageDialog(null,msg);
+        }
+    String stock = tf_stock.getText();
+           if(stock.isEmpty()){
+            JOptionPane.showMessageDialog(null,msg);
+        }
+    }
 
     public void getAllData() {
         this.rs = controller.get();
@@ -105,6 +130,8 @@ public class AdminFrame extends javax.swing.JFrame {
                 this.rs1 = oc.showByIdBuyer(query);
             } else if (type.equals("id_order") && !query.isEmpty()) {
                 this.rs1 = oc.showByIdOrder(query);
+            } else if (type.equals("id_album") && !query.isEmpty()) {
+                this.rs1 = oc.showByIdAlbum(query);
             }
             
             this.orderTable(this.rs1);
@@ -120,7 +147,7 @@ public class AdminFrame extends javax.swing.JFrame {
             } else if (type.equals("id_user") && !query.isEmpty()) {
                 this.rs2 = uc.showById(query);
             } else if (type.equals("type") && !query.isEmpty()) {
-                this.rs2 = uc.showById(query);
+                this.rs2 = uc.showByType(query);
             }
             
             this.userTable(this.rs2);
@@ -178,6 +205,8 @@ public class AdminFrame extends javax.swing.JFrame {
         tb_users = new javax.swing.JTable();
         bt_logout = new javax.swing.JButton();
         bt_search_user_type = new javax.swing.JButton();
+        bt_search_id_album = new javax.swing.JButton();
+        btn_delete_order = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -377,6 +406,21 @@ public class AdminFrame extends javax.swing.JFrame {
             }
         });
 
+        bt_search_id_album.setText("Cari ID Album");
+        bt_search_id_album.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bt_search_id_albumActionPerformed(evt);
+            }
+        });
+
+        btn_delete_order.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
+        btn_delete_order.setText("Delete");
+        btn_delete_order.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_delete_orderActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -450,32 +494,38 @@ public class AdminFrame extends javax.swing.JFrame {
                         .addGap(30, 30, 30)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addGap(283, 283, 283)
-                                .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(bt_logout, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(BTN_EXIT))
-                                .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(6, 6, 6)
-                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 686, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(tf_search_order, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(8, 8, 8)
-                                .addComponent(bt_search_order_idOrder)
+                                    .addComponent(btn_delete_order, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(6, 6, 6)
-                                .addComponent(tf_search_id_buyer, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(49, 49, 49)
-                                .addComponent(jLabel13)
-                                .addGap(18, 18, 18)
-                                .addComponent(tf_search_user, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(19, 19, 19)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 686, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addComponent(bt_logout, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(BTN_EXIT))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel1)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(tf_search_order, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(bt_search_order_idOrder)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(tf_search_id_buyer)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(bt_search_id_album)))
+                                .addGap(45, 45, 45)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel13)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(tf_search_user, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(6, 6, 6)
                                 .addComponent(bt_search_user)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(cb_user_type, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(cb_user_type, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(bt_search_user_type)
                                 .addGap(4, 4, 4)))))
@@ -551,22 +601,28 @@ public class AdminFrame extends javax.swing.JFrame {
                         .addGap(5, 5, 5)
                         .addComponent(jLabel1))
                     .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(6, 6, 6)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(tf_search_user, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel13))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(1, 1, 1)
+                        .addGap(6, 6, 6)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tf_search_user, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(bt_search_user)
+                                .addComponent(jLabel13))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(1, 1, 1)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(cb_user_type, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(bt_search_user_type))))
+                        .addGap(11, 11, 11))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(tf_search_order, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(bt_search_order_idOrder)
                             .addComponent(tf_search_id_buyer)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(bt_search_user)
-                                .addComponent(cb_user_type, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(bt_search_user_type)))))
-                .addGap(11, 11, 11)
+                            .addComponent(bt_search_id_album))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(1, 1, 1)
@@ -575,7 +631,8 @@ public class AdminFrame extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(BTN_EXIT)
-                    .addComponent(bt_logout, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(bt_logout, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_delete_order))
                 .addContainerGap(41, Short.MAX_VALUE))
         );
 
@@ -610,6 +667,7 @@ public class AdminFrame extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, msg);
             this.clear();
             this.getAllData();
+            this.validation();
 
         } catch (ParseException e) {
             System.out.println(e.getMessage());
@@ -748,6 +806,34 @@ public class AdminFrame extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_bt_logoutActionPerformed
 
+    private void btn_delete_orderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_delete_orderActionPerformed
+        // TODO add your handling code here:
+    try {
+            String id_order = helper.getValueRows(tb_orders, 0);
+            this.order_id = id_order;
+
+            Boolean result = oc.delete(this.order_id);
+            
+            String msg = "Gagal menghapus data!";
+            if(result) {
+                msg = "Berhasil menghapus data";
+            }
+            
+            JOptionPane.showMessageDialog(null, msg);
+            
+            this.clear();
+            this.getAllData();
+            
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }//GEN-LAST:event_btn_delete_orderActionPerformed
+
+    private void bt_search_id_albumActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_search_id_albumActionPerformed
+        // TODO add your handling code here:
+        this.searchOrder("id_album", tf_search_order.getText());
+    }//GEN-LAST:event_bt_search_id_albumActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -786,10 +872,12 @@ public class AdminFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BTN_EXIT;
     private javax.swing.JButton bt_logout;
+    private javax.swing.JButton bt_search_id_album;
     private javax.swing.JButton bt_search_order_idOrder;
     private javax.swing.JButton bt_search_user;
     private javax.swing.JButton bt_search_user_type;
     private javax.swing.JButton btn_delete;
+    private javax.swing.JButton btn_delete_order;
     private javax.swing.JButton btn_search_id;
     private javax.swing.JButton btn_search_title;
     private javax.swing.JButton btn_submit;

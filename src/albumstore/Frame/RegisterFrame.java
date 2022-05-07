@@ -35,6 +35,17 @@ public class RegisterFrame extends javax.swing.JFrame {
         pf_conpass.setText("");
     }
 
+    public void validation(){
+    String msg = "Form cannot be blank!";
+    String phone = tf_phone.getText();
+        if(phone.isEmpty()){
+            JOptionPane.showMessageDialog(null,msg);
+        }
+        if(!phone.matches("[0-9]+")){
+            JOptionPane.showMessageDialog(null, "Amount contains number only!");
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -316,6 +327,9 @@ public class RegisterFrame extends javax.swing.JFrame {
 
     private void btn_signupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_signupActionPerformed
         // TODO add your handling code here:
+        // validation
+        this.validation();
+
         try{
             String name = tf_name.getText();
             String address = tf_address.getText();

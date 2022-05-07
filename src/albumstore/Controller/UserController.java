@@ -62,7 +62,7 @@ public class UserController extends BaseController{
         String sql = this.uq.showByType;
         
         Map<Integer, Object> map = new HashMap<>();
-        map.put(1, helper.parseLikeQuery(type));
+        map.put(1,type);
         
         return this.getWithParameter(map, sql);
     }

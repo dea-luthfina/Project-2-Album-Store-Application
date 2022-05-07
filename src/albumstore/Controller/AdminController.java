@@ -80,6 +80,17 @@ public class AdminController extends BaseController {
         
         return this.preparedStatement(map, sql);
     }
+
+    public boolean updateStock(String id_album, AdminModel model) throws ParseException {
+        
+        Map<Integer, Object> map = new HashMap<>();
+        map.put(1, model.getStock());
+        map.put(2, id_album);
+        
+        String sql = this.query.updateStock;
+        
+        return this.preparedStatement(map, sql);
+    }
     
     public boolean delete(String id_album) throws ParseException {
         
