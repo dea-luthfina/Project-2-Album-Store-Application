@@ -101,4 +101,14 @@ public class AdminController extends BaseController {
         
         return this.preparedStatement(map, sql);
     }
+
+    public ResultSet checkAlbum(String title, String years) {
+        String sql = this.query.checkAlbum;
+        
+        Map<Integer, Object> map = new HashMap<>();
+        map.put(1, helper.parseLikeQuery(title));
+        map.put(2, years);
+        
+        return this.getWithParameter(map, sql);
+    }
 }

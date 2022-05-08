@@ -12,6 +12,8 @@ import albumstore.Model.AdminModel;
 import albumstore.Model.UserModel;
 import java.sql.ResultSet;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import net.proteanit.sql.DbUtils;
@@ -59,28 +61,152 @@ public class AdminFrame extends javax.swing.JFrame {
         cb_type.setSelectedIndex(0);
     }     
 
-    private void validation(){
-    String msg = "Form cannot be blank!";
+    private String validationUpdate(){
+        List<String> flag = new ArrayList<String>();
+        String alert = "";
+
     String title = tf_title.getText();
         if(title.isEmpty()){
-            JOptionPane.showMessageDialog(null,msg);
+            flag.add("Title cannot be blank!");
         }
+
+        if(cb_type.getSelectedIndex()== 0){
+            flag.add("Type cannot be blank!");
+        }
+
     String artist = tf_artist.getText();
            if(artist.isEmpty()){
-            JOptionPane.showMessageDialog(null,msg);
+            flag.add("Artist cannot be blank!");
         }
+
     String years = tf_years.getText();
            if(years.isEmpty()){
-            JOptionPane.showMessageDialog(null,msg);
+            flag.add("Year cannot be blank!");
         }
+
+           else if(!(years.length()== 4)){
+            flag.add("Please enter a spesific year!");
+        }
+
+           else if(!years.matches("[0-9]+")){
+            flag.add("Year contains number only!");
+        }
+
     String price = tf_price.getText();
            if(price.isEmpty()){
-            JOptionPane.showMessageDialog(null,msg);
+             flag.add("Price cannot be blank!");
         }
+
+           else if(!price.matches("[0-9]+")){
+            flag.add("Price contains number only!");
+        }
+
     String stock = tf_stock.getText();
            if(stock.isEmpty()){
-            JOptionPane.showMessageDialog(null,msg);
+              flag.add("Stock cannot be blank!");
         }
+
+           if(stock.equals(0)){
+              flag.add("Stock cannot be empty!");
+        }
+
+           else if(!stock.matches("[0-9]+")){
+            flag.add("Stock contains number only!");
+        }
+
+        if (flag.size() > 0) {
+            for (String msg : flag) {
+                alert += (msg + "\n");
+            }
+        }
+
+        return alert;
+    }
+
+    private String validationSubmit() {
+        List<String> flag = new ArrayList<String>();
+        String alert = "";
+        
+    String title = tf_title.getText();
+    String years = tf_years.getText();
+    Boolean check = (this.checkAlbum(title, years));
+        if(check.equals(true)){
+            flag.add("The data already exist.");
+        }
+
+        if (flag.size() > 0) {
+            for (String msg : flag) {
+                alert += (msg + "\n");
+            }
+        }
+
+        return alert;
+    }
+
+    public void saveAlbum(){
+        try {
+            String title = tf_title.getText();
+            String artist = tf_artist.getText();
+            String years = tf_years.getText();
+            String price = tf_price.getText();
+            String stock = tf_stock.getText();
+            String type = cb_type.getSelectedItem().toString();
+            
+
+            model.setTitle(title);
+            model.setArtist(artist);
+            model.setYears(years);
+            model.setType(type);
+            model.setPrice(price);
+            model.setStock(stock);
+
+            Boolean result = controller.create(model);
+            
+            String msg = "Gagal menambahkan data!";
+            if(result) {
+                msg = "Berhasil menambahkan data";
+            }
+            
+            JOptionPane.showMessageDialog(null, msg);
+            this.clear();
+            this.getAllData();
+
+        } catch (ParseException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void updateAlbum(){
+        try {
+            String title = tf_title.getText();
+            String artist = tf_artist.getText();
+            String years = tf_years.getText();
+            String price = tf_price.getText();
+            String stock = tf_stock.getText();
+            String type = cb_type.getSelectedItem().toString();
+            
+
+            model.setTitle(title);
+            model.setArtist(artist);
+            model.setYears(years);
+            model.setType(type);
+            model.setPrice(price);
+            model.setStock(stock);
+
+            Boolean result = controller.update(this.album_id, model);
+            
+            String msg = "";
+            if(result) {
+                msg = "Berhasil mengubah data";
+            }
+            
+            JOptionPane.showMessageDialog(null, msg);
+            this.clear();
+            this.getAllData();
+            
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }  
     }
 
     public void getAllData() {
@@ -153,6 +279,41 @@ public class AdminFrame extends javax.swing.JFrame {
             this.userTable(this.rs2);
         }catch(Exception ex) {
             System.out.println(ex.getMessage());
+        }
+    }
+
+    public Boolean checkAlbum(String title, String years) {
+        Boolean album_exist = false;
+	try {
+		this.rs = controller.checkAlbum(title, years);
+
+		if (this.rs.next()) {
+		album_exist = true;
+            	}
+	}
+	catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+
+	return album_exist;
+    }
+
+    public void deleteAlbum(){
+        try {
+            Boolean result = controller.delete(this.album_id);
+            
+            String msg = "Gagal menghapus data!";
+            if(result) {
+                msg = "Berhasil menghapus data";
+            }
+            
+            JOptionPane.showMessageDialog(null, msg);
+            
+            this.clear();
+            this.getAllData();
+            
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -641,36 +802,20 @@ public class AdminFrame extends javax.swing.JFrame {
 
     private void btn_submitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_submitActionPerformed
          // TODO add your handling code here:
-        try {
-            String title = tf_title.getText();
-            String artist = tf_artist.getText();
-            String years = tf_years.getText();
-            String price = tf_price.getText();
-            String stock = tf_stock.getText();
-            String type = cb_type.getSelectedItem().toString();
-            
-
-            model.setTitle(title);
-            model.setArtist(artist);
-            model.setYears(years);
-            model.setType(type);
-            model.setPrice(price);
-            model.setStock(stock);
-
-            Boolean result = controller.create(model);
-            
-            String msg = "Gagal menambahkan data!";
-            if(result) {
-                msg = "Berhasil menambahkan data";
-            }
-            
-            JOptionPane.showMessageDialog(null, msg);
-            this.clear();
-            this.getAllData();
-            this.validation();
-
-        } catch (ParseException e) {
-            System.out.println(e.getMessage());
+        String validationUp = this.validationUpdate();
+        if(validationUp.length() > 0) {
+            JOptionPane.showMessageDialog(null, validationUp, "Validation Error!", 
+            JOptionPane.INFORMATION_MESSAGE);
+            return;
+        } 
+        String validationSub = this.validationSubmit();
+        if(validationSub.length() > 0) {
+            JOptionPane.showMessageDialog(null, validationSub, "Validation Error!", 
+            JOptionPane.INFORMATION_MESSAGE);
+            return;
+        } 
+        else {
+            this.saveAlbum();
         }
     }//GEN-LAST:event_btn_submitActionPerformed
 
@@ -717,57 +862,20 @@ public class AdminFrame extends javax.swing.JFrame {
 
     private void btn_updateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_updateActionPerformed
         // TODO add your handling code here:
-        try {
-            String title = tf_title.getText();
-            String artist = tf_artist.getText();
-            String years = tf_years.getText();
-            String price = tf_price.getText();
-            String stock = tf_stock.getText();
-            String type = cb_type.getSelectedItem().toString();
-            
-
-            model.setTitle(title);
-            model.setArtist(artist);
-            model.setYears(years);
-            model.setType(type);
-            model.setPrice(price);
-            model.setStock(stock);
-
-            Boolean result = controller.update(this.album_id, model);
-            
-            String msg = "Gagal mengubah data!";
-            if(result) {
-                msg = "Berhasil mengubah data";
-            }
-            
-            JOptionPane.showMessageDialog(null, msg);
-            this.clear();
-            this.getAllData();
-            
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }                                         
+            String validation = this.validationUpdate();
+        if(validation.length() > 0) {
+            JOptionPane.showMessageDialog(null, validation, "Validation Error!", 
+            JOptionPane.INFORMATION_MESSAGE);
+            return;
+        } 
+        else {
+            this.updateAlbum();
+        }                                   
     }//GEN-LAST:event_btn_updateActionPerformed
 
     private void btn_deleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_deleteActionPerformed
         // TODO add your handling code here:
-    try {
-            
-            Boolean result = controller.delete(this.album_id);
-            
-            String msg = "Gagal menghapus data!";
-            if(result) {
-                msg = "Berhasil menghapus data";
-            }
-            
-            JOptionPane.showMessageDialog(null, msg);
-            
-            this.clear();
-            this.getAllData();
-            
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
+        this.deleteAlbum();
     }//GEN-LAST:event_btn_deleteActionPerformed
 
     private void BTN_EXITActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTN_EXITActionPerformed

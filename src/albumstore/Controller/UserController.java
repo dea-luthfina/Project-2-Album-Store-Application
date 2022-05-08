@@ -66,4 +66,13 @@ public class UserController extends BaseController{
         
         return this.getWithParameter(map, sql);
     }
+
+    public ResultSet checkUsername (String username) {
+        String sql = this.uq.checkUsername;
+        
+        Map<Integer, Object> map = new HashMap<>();
+        map.put(1, helper.parseLikeQuery(username));
+        
+        return this.getWithParameter(map, sql);
+    }
 }

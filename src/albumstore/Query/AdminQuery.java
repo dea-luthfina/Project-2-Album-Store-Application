@@ -25,4 +25,6 @@ public class AdminQuery {
     public String updateStock = "UPDATE albums SET stock = ? WHERE id_album = ?";
 
     public String delete = "DELETE FROM albums WHERE id_album = ?";  
+
+    public String checkAlbum = "SELECT * FROM albums WHERE title LIKE ? AND years = ?";
 }

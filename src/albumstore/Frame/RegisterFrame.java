@@ -8,6 +8,8 @@ import albumstore.Controller.UserController;
 import java.sql.ResultSet;
 import javax.swing.JOptionPane;
 import albumstore.Model.UserModel;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -33,18 +35,110 @@ public class RegisterFrame extends javax.swing.JFrame {
         tf_username.setText("");
         pf_passregist.setText("");
         pf_conpass.setText("");
+        tf_useregist.setText("");
     }
 
-    public void validation(){
-    String msg = "Form cannot be blank!";
-    String phone = tf_phone.getText();
-        if(phone.isEmpty()){
-            JOptionPane.showMessageDialog(null,msg);
+    public String validation(){
+        List<String> flag = new ArrayList<String>();
+        String alert = "";
+
+        String name = tf_name.getText();
+        if(name.isEmpty()){
+            flag.add("Name cannot be blank!");
         }
-        if(!phone.matches("[0-9]+")){
-            JOptionPane.showMessageDialog(null, "Amount contains number only!");
+
+        String address = tf_address.getText();
+        if(address.isEmpty()){
+            flag.add("Address cannot be blank!");
+        }
+
+        String username = tf_useregist.getText();
+
+        if(username.isEmpty()){
+            flag.add("User cannot be blank!");
+        }
+
+        Boolean check = (this.checkUsername(username));
+        if(check.equals(true)){
+            flag.add("This Username is Already Taken, Choose Another One!");
+        }
+
+        String pass = new String(pf_passregist.getPassword());
+        if(pass.isEmpty()){
+            flag.add("Password cannot be blank!");
+        }
+
+        String conpass = new String(pf_conpass.getPassword());
+        if(conpass.isEmpty()){
+            flag.add("Confirm Password cannot be blank!");
+        }
+
+        if(!pass.equals(conpass)){
+            flag.add("The password doesn't match!");
+        }
+
+        String phone = tf_phone.getText();
+        if(phone.isEmpty()){
+            flag.add("Phone cannot be blank!");
+        }
+        else if(!phone.matches("[0-9]+")){
+            flag.add("Phone contains number only!");
+        }
+
+        if (flag.size() > 0) {
+            for (String msg : flag) {
+                alert += (msg + "\n");
+            }
+        }
+
+        return alert;
+    }
+
+    public void signUp(){
+        try{
+            String name = tf_name.getText();
+            String address = tf_address.getText();
+            String phone = tf_phone.getText();
+            String username = tf_useregist.getText();
+            String password = new String(pf_passregist.getPassword());
+
+            um.setName(name);
+            um.setAddress(address);
+            um.setPhone(phone);
+            um.setUsername(username);
+            um.setPassword(password);
+
+
+            Boolean result = uc.regist(um);
+
+            String msg = "";
+            if(result) {
+                msg = "Thanks for signing up! Login now";
+            }
+
+            JOptionPane.showMessageDialog(null, msg);
+            this.clear();
+        }
+        catch (Exception ex) {
+            System.out.println(ex.getMessage());
         }
     }
+
+    public Boolean checkUsername(String username) {
+        Boolean username_exist = false;
+	try {
+		this.rs = uc.checkUsername(username);
+
+		if (this.rs.next()) {
+		username_exist = true;
+            	}
+	}
+	catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+
+	return username_exist;
+    } 
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -326,40 +420,15 @@ public class RegisterFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_signinActionPerformed
 
     private void btn_signupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_signupActionPerformed
-        // TODO add your handling code here:
-        // validation
-        this.validation();
-
-        try{
-            String name = tf_name.getText();
-            String address = tf_address.getText();
-            String phone = tf_phone.getText();
-            String username = tf_useregist.getText();
-            String password = new String(pf_passregist.getPassword());
-            String conpass = new String(pf_conpass.getPassword());
-
-            um.setName(name);
-            um.setAddress(address);
-            um.setPhone(phone);
-            um.setUsername(username);
-            um.setPassword(password);
-
-            if(!password.equals(conpass)){
-                lbl_warning.setText("The password doesn't match!");
-            }
-
-            Boolean result = uc.regist(um);
-
-            String msg = "";
-            if(result) {
-                msg = "Thanks for signing up! Login now";
-            }
-
-            JOptionPane.showMessageDialog(null, msg);
+        String validation = this.validation();
+        if(validation.length() > 0) {
+            JOptionPane.showMessageDialog(null, validation, "Validation Error!", 
+            JOptionPane.INFORMATION_MESSAGE);
+            return;
+        } 
+        else {
+            this.signUp();
             this.clear();
-        }
-        catch (Exception ex) {
-            System.out.println(ex.getMessage());
         }
     }//GEN-LAST:event_btn_signupActionPerformed
 

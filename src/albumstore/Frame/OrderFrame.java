@@ -14,7 +14,9 @@ import albumstore.Model.UserModel;
 import albumstore.Query.OrderQuery;
 import java.sql.ResultSet;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import net.proteanit.sql.DbUtils;
@@ -67,15 +69,42 @@ public class OrderFrame extends javax.swing.JFrame {
         tf_total_price.setEditable(false);
     }
 
-    public void validation(){
-    String msg = "Form cannot be blank!";
-    String amount = tf_amount_album.getText();
-        if(amount.isEmpty()){
-            JOptionPane.showMessageDialog(null,msg);
+     private String validation() {
+        List<String> flag = new ArrayList<String>();
+        String alert = "";
+        
+        String amount = tf_amount_album.getText();
+        
+        if(amount.isEmpty()) {
+            flag.add("Amount cannot be blank!");
         }
+
         if(!amount.matches("[0-9]+")){
-            JOptionPane.showMessageDialog(null, "Amount contains number only!");
+            flag.add("Amount contains number only!");
         }
+
+        if(dp_date.getDate()== null){
+            flag.add("Date cannot be blank!");
+        }
+
+        int stock = Integer.parseInt(helper.getValueRows(tb_album, 6));
+        int buy = Integer.parseInt(amount);
+
+        if(buy == 0){
+              flag.add("Amount cannot be empty!");
+        }
+
+        if(buy > stock){
+            flag.add("Lack of stock!");
+        }
+
+        if (flag.size() > 0) {
+            for (String msg : flag) {
+                alert += (msg + "\n");
+            }
+        }
+
+        return alert;
     }
 
     public void reduceAlbumStock(){
@@ -92,13 +121,7 @@ public class OrderFrame extends javax.swing.JFrame {
 
             am.setStock(update);
 
-            Boolean result = controller.updateStock(this.album_id, am);
-
-            String msg = "Gagal mengubah data!";
-            if(result) {
-                msg = "Berhasil mengubah data";
-            }
-            JOptionPane.showMessageDialog(null, msg);
+            controller.updateStock(this.album_id, am);
             this.getDataAlbum();
 
         } catch (ParseException e) {
@@ -134,6 +157,37 @@ public class OrderFrame extends javax.swing.JFrame {
         amount = Integer.parseInt(tf_amount_album.getText());
         result = price * amount;
         tf_total_price.setText(String.valueOf(result));
+    }
+
+    private void saveDataOrder(){
+        try {
+            String id_album = helper.getValueRows(tb_album, 0);
+            String amount = tf_amount_album.getText();
+            String total = tf_total_price.getText();
+            String id_user = label_id.getText();
+
+            Date date = dp_date.getDate();
+            
+            OrderModel model = new OrderModel();
+            model.setId_album(id_album);
+            model.setTotal_price(total);
+            model.setAmount(amount);
+            model.setOrder_date(date);
+            model.setId_user(id_user);
+
+            Boolean result = oc.create(model);
+            
+            String msg = "Gagal menambahkan data!";
+            if(result) {
+                msg = "Berhasil menambahkan pesanan Anda.";
+            }
+            
+            JOptionPane.showMessageDialog(null, msg);
+            this.getDataOrder(); 
+            this.reduceAlbumStock();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     private void searchAlbum(String type, String query) {
@@ -473,39 +527,15 @@ public class OrderFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_tb_albumMouseClicked
 
     private void btn_submitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_submitActionPerformed
-      // mengurangkan stock album
-      this.reduceAlbumStock();
-
-      // validation
-        this.validation(); 
-
-        try {
-            String id_album = helper.getValueRows(tb_album, 0);
-            String amount = tf_amount_album.getText();
-            String total = tf_total_price.getText();
-            String id_user = label_id.getText();
-
-            Date date = dp_date.getDate();
-            
-            OrderModel model = new OrderModel();
-            model.setId_album(id_album);
-            model.setTotal_price(total);
-            model.setAmount(amount);
-            model.setOrder_date(date);
-            model.setId_user(id_user);
-
-            Boolean result = oc.create(model);
-            
-            String msg = "Gagal menambahkan data!";
-            if(result) {
-                msg = "Berhasil menambahkan pesanan Anda.";
-            }
-            
-            JOptionPane.showMessageDialog(null, msg);
+        String validation = this.validation();
+        if(validation.length() > 0) {
+            JOptionPane.showMessageDialog(null, validation, "Validation Error!", 
+            JOptionPane.INFORMATION_MESSAGE);
+            return;
+        } 
+        else {
+            this.saveDataOrder();
             this.clear();
-            this.getDataOrder(); 
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
         }
     }//GEN-LAST:event_btn_submitActionPerformed
 
